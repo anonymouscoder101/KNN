@@ -62,7 +62,7 @@ string KNNImageClassifier::Predict(string test_image_filename) {
   return max_label;
 }
 
-string GetLabel(string filename) {
+string KNNImageClassifier::GetLabel(string filename) {
   std::regex pattern(R"(([^_/]+)_\d+\.ppm)");
   std::smatch match;
   if (std::regex_match(filename, match, pattern)) {
@@ -87,7 +87,7 @@ KNNImageClassifier::KNNImageClassifier(const string &imageDirectory, int k) {
   }
 }
 
-double KNNImageClassifier::Score(vector<string> test_files) {
+double KNNImageClassifier::ClassificationError(vector<string> test_files) {
   int errors = 0;
   int total = test_files.size();
   for (string &test_file: test_files) {

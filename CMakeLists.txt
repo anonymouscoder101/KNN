@@ -30,39 +30,19 @@ if(UNIX AND NOT APPLE)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-z,stack-size=${stack_size}")
 endif()
 
+# Set output directories for executables to ensure they are easy to find and run
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 # Run basic driver test showing functionality.
 add_executable(ImageMaker_Driver ImageMaker_driver.cpp ImageMaker.cpp)
 
-# Test getters, setters, constructors, save and load
-add_executable(Getter_Setter_Test unit_tests/getter_setter_tests.cpp ImageMaker.cpp)
-add_executable(Constructor_Test unit_tests/constructor_tests.cpp ImageMaker.cpp
-        KNNImageClassifier.cpp
-        KNNImageClassifier.h)
-add_executable(Save_Load_Test unit_tests/save_load_tests.cpp ImageMaker.cpp)
+# Unit test target for KNNImageClassifier
+file(GLOB UNIT_TEST_SOURCES unit_tests/*.cpp)
+add_executable(KNNImageClassifier_Tests ${UNIT_TEST_SOURCES} ImageMaker.cpp KNNImageClassifier.cpp)
+target_link_libraries(KNNImageClassifier_Tests PRIVATE Catch2::Catch2WithMain)
+#target_include_directories(KNNImageClassifier_Tests PRIVATE ${CMAKE_BINARY_DIR}/_deps/catch2-src/include)
 
-# Draw Tests (requires getters, setters, constructors, save and load to work)
-add_executable(DrawPixel_Test unit_tests/DrawPixel_tests.cpp ImageMaker.cpp)
-add_executable(DrawRectangle_Test unit_tests/DrawRectangle_tests.cpp ImageMaker.cpp)
-add_executable(DrawLine_Test unit_tests/DrawLine_tests.cpp ImageMaker.cpp)
+# Ensure tests are found in the correct location
+#add_test(NAME KNNImageClassifier_Tests COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/KNNImageClassifier_Tests)
 
-target_link_libraries(Getter_Setter_Test Catch2::Catch2WithMain)
-target_link_libraries(Constructor_Test Catch2::Catch2WithMain)
-target_link_libraries(Save_Load_Test Catch2::Catch2WithMain)
-target_link_libraries(DrawPixel_Test Catch2::Catch2WithMain)
-target_link_libraries(DrawRectangle_Test Catch2::Catch2WithMain)
-target_link_libraries(DrawLine_Test Catch2::Catch2WithMain)
-
-# Copy images from backup_images to images.  PPM files in images is used for catch tests.
-add_custom_target(copy_image_data
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/backup_images/"
-        "${CMAKE_CURRENT_SOURCE_DIR}/images/"
-        COMMENT "Copying image data for tests"
-)
-add_dependencies(ImageMaker_Driver copy_image_data)
-add_dependencies(Getter_Setter_Test copy_image_data)
-add_dependencies(Constructor_Test copy_image_data)
-add_dependencies(Save_Load_Test copy_image_data)
-add_dependencies(DrawPixel_Test copy_image_data)
-add_dependencies(DrawRectangle_Test copy_image_data)
-add_dependencies(DrawLine_Test copy_image_data)
+#enable_testing()

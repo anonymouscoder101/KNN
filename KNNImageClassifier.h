@@ -30,14 +30,13 @@ private:
 
   int k;
   vector<TrainImages> train_images;
-  string GetLabel(string filename);
-
-  double EuclideanDistance(ImageMaker img1, ImageMaker img2);
-  string Predict(string test_image);
 
 public:
+  string GetLabel(string filename);
   explicit KNNImageClassifier(const string& imageDirectory, int k=3);
-  double Score(vector<string> test_files);
+  double ClassificationError(vector<string> test_files);
+  double EuclideanDistance(ImageMaker img1, ImageMaker img2);
+  string Predict(string test_image);
 };
 
 #endif // IMAGEMAKER_KNNIMAGECLASSIFIER_H
