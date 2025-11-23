@@ -5,6 +5,7 @@
 #include <string>
 #include <random>
 #include <algorithm>
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -57,6 +58,7 @@ TEST_CASE("KNNImageClassifier public methods", "[KNN]") {
         std::mt19937 rng(FIXED_SEED);
         std::shuffle(test_files.begin(), test_files.end(), rng);
         double error_rate = classifier.ClassificationError(test_files);
+        std::cout << "Error Rate: " << error_rate << std::endl;
         REQUIRE(error_rate >= 0.0);
         REQUIRE(error_rate <= 1.0);
     }
