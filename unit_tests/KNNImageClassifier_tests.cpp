@@ -23,8 +23,8 @@ auto collect_ppm_files(const std::string& root) -> std::vector<std::string> {
 constexpr unsigned int FIXED_SEED = 301;
 
 TEST_CASE("KNNImageClassifier public methods", "[KNN]") {
-    std::string image_dir = "jellybean_crops";
-    std::string test_dir = "test_images";
+    std::string image_dir = "../../jellybean_crops";
+    std::string test_dir = "../../test_images";
     int k = 3;
     KNNImageClassifier classifier(image_dir, k);
 
@@ -45,13 +45,13 @@ TEST_CASE("KNNImageClassifier public methods", "[KNN]") {
     }
 
     SECTION("Predict returns a label from training set") {
-        auto files = collect_ppm_files(image_dir);
+        auto files = collect_ppm_files(test_dir);
         REQUIRE(!files.empty());
         std::string label = classifier.Predict(files[0]);
         REQUIRE(!label.empty());
     }
 
-    SECTION("Score computes overall error rate (fixed seed)") {
+    SECTION("ClassificationError computes overall error rate (fixed seed)") {
         auto test_files = collect_ppm_files(test_dir);
         REQUIRE(!test_files.empty());
         std::mt19937 rng(FIXED_SEED);

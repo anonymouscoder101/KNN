@@ -21,7 +21,7 @@ double KNNImageClassifier::EuclideanDistance(ImageMaker img1, ImageMaker img2) {
       dist += diff * diff;
     }
   }
-  return pow(dist, 0.5);
+  return dist;
 }
 
 string KNNImageClassifier::Predict(string test_image_filename) {
@@ -63,9 +63,10 @@ string KNNImageClassifier::Predict(string test_image_filename) {
 }
 
 string KNNImageClassifier::GetLabel(string filename) {
+  std::string fn = std::filesystem::path(filename).filename().string();
   std::regex pattern(R"(([^_/]+)_\d+\.ppm)");
   std::smatch match;
-  if (std::regex_match(filename, match, pattern)) {
+  if (std::regex_match(fn, match, pattern)) {
     std::string label = match[1];
     return label;
   }
