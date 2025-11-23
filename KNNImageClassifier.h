@@ -18,7 +18,7 @@ private:
   };
 
   struct TrainImages {
-    // ImageMaker img; // Object representing an image
+    ImageMaker img; // Object representing an image
     string filename;
     string label; // Image category
   };

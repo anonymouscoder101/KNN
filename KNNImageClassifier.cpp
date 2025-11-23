@@ -8,16 +8,16 @@
 #include <regex>
 
 double KNNImageClassifier::EuclideanDistance(ImageMaker img1, ImageMaker img2) {
-  int h = img1.GetHeight();
-  int w = img1.GetWidth();
+  int h = img1.height;
+  int w = img1.width;
   double dist = 0.0;
   for (int row = 0; row < h; row++) {
     for (int col = 0; col < w; col++) {
-      double diff = img1.GetPixel(row, col, RED) - img2.GetPixel(row, col, RED);
+      int diff = img1.image[col][row][RED] - img2.image[col][row][RED];
       dist += diff * diff;
-      diff = img1.GetPixel(row, col, GREEN) - img2.GetPixel(row, col, GREEN);
+      diff = img1.image[col][row][GREEN] - img2.image[col][row][GREEN];
       dist += diff * diff;
-      diff = img1.GetPixel(row, col, BLUE) - img2.GetPixel(row, col, BLUE);
+      diff = img1.image[col][row][BLUE] - img2.image[col][row][BLUE];
       dist += diff * diff;
     }
   }
@@ -29,7 +29,7 @@ string KNNImageClassifier::Predict(string test_image_filename) {
   ImageMaker test_image = ImageMaker(test_image_filename);
   for (auto train_image : train_images) {
     double dist =
-        EuclideanDistance(test_image, ImageMaker(train_image.filename));
+        EuclideanDistance(test_image, train_image.img);
     DistanceWithLabel distance_with_label = {dist, train_image.label};
     distances.push_back(distance_with_label);
   }
@@ -83,6 +83,7 @@ KNNImageClassifier::KNNImageClassifier(const string &imageDirectory, int k) {
       TrainImages ti;
       ti.filename = entry.path().string(); // full path
       ti.label = GetLabel(filename);
+      ti.img = ImageMaker(ti.filename);
       train_images.push_back(ti);
     }
   }

@@ -21,6 +21,7 @@ using namespace std;
 //  textbook.
 
 class ImageMaker {
+  friend class KNNImageClassifier;
 public:
   /*
    * Precondition:
